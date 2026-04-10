@@ -123,8 +123,11 @@
     // Loader bergaya mobile
     hasilDiv.innerHTML = '<div class="spinner-custom"></div>';
 
-fetch("https://script.google.com/macros/s/AKfycbyz5mqrNZKXyysbc2IV_zwIj-F05i6_2bTicq01BZIpOyb06_M-UuC73NAs_DLIuGF4/exec?nama=" + encodeURIComponent(namaBersih))
-      .then(response => response.json())
+fetch("https://script.google.com/macros/s/AKfycbyz5mqrNZKXyysbc2IV_zwIj-F05i6_2bTicq01BZIpOyb06_M-UuC73NAs_DLIuGF4/exec?nama=" + encodeURIComponent(namaBersih), {
+  method: "GET"
+})
+      
+  .then(response => response.json())
       .then(res => {
         if (res.status == "ditemukan") {
           hasilDiv.innerHTML = `
