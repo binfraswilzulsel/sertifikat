@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>E-Sertifikat @zuwlend</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --bg-color: #f0f2f5;
+    }
+    body { 
+      background-color: var(--bg-color); 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .main-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card-mobile {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 400px;
+      padding: 30px 20px;
+      border: none;
+    }
+    .header-icon {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    .form-control-lg {
+      border-radius: 12px;
+      border: 2px solid #eee;
+      padding: 12px 15px;
+      font-size: 16px; /* Mencegah auto-zoom di iPhone */
+    }
+    .form-control-lg:focus {
+      border-color: var(--primary-color);
+      box-shadow: none;
+    }
+    .btn-download {
+      background-color: var(--primary-color);
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+    }
+    .btn-download:active {
+      transform: scale(0.98);
+    }
+    .footer-text {
+      font-size: 0.7rem;
+      color: #888;
+      margin-top: 25px;
+      line-height: 1.5;
+    }
+    /* Animasi Loader */
+    .spinner-custom {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="main-container">
+  <div class="card-mobile text-center">
+    <div class="header-icon">📄</div>
+    <h4 class="fw-bold mb-1">E-Sertifikat</h4>
+    <p class="text-muted small mb-4">Workshop Infrastruktur & Wilayah</p>
+
+    <div class="text-start mb-4">
+      <label class="small fw-bold mb-2 text-secondary">NAMA LENGKAP</label>
+      <input type="text" id="namaInput" class="form-control form-control-lg" placeholder="Masukkan nama sesuai daftar..." autocomplete="off">
+    </div>
+
+    <button onclick="cari()" class="btn btn-primary btn-download w-100 shadow-sm">
+      CEK SERTIFIKAT
+    </button>
+
+    <div id="hasil" class="mt-4">
+      </div>
+
+    <div class="footer-text">
+      Digital Certificate System v1.0<br>
+      Created by <b>@zuwlend</b><br>
+      BAPPELITBANGDA Prov. Sulsel
+    </div>
+  </div>
+</div>
+
+<script>
+  function cari() {
+    const namaInput = document.getElementById('namaInput');
+    const hasilDiv = document.getElementById('hasil');
+    const namaRaw = namaInput.value;
+    const namaBersih = namaRaw.trim().toLowerCase();
+
+    if (!namaBersih) {
+      hasilDiv.innerHTML = '<div class="alert alert-warning border-0 small">Tuliskan nama Anda dulu ya.</div>';
+      return;
+    }
+
+    // Loader bergaya mobile
+    hasilDiv.innerHTML = '<div class="spinner-custom"></div>';
+    
+    google.script.run.withSuccessHandler(function(res) {
+      if (res.status == "ditemukan") {
+        hasilDiv.innerHTML = `
+          <div class="p-3 bg-light rounded-3 border mb-3">
+            <p class="text-success small fw-bold mb-2">✓ Sertifikat ditemukan!</p>
+            <a href="${res.url}" target="_blank" class="btn btn-success w-100 fw-bold py-3 shadow-sm" style="border-radius:10px;">
+              UNDUH SEKARANG (PDF)
+            </a>
+          </div>`;
+      } else {
+        hasilDiv.innerHTML = `
+          <div class="alert alert-danger border-0 small">
+            <b>Nama Tidak Ditemukan</b><br>
+            Coba ketik ulang tanpa gelar atau cek kembali ejaannya.
+          </div>`;
+      }
+    }).cariSertifikat(namaBersih);
+  }
+</script>
+
+</body>
+</html>
