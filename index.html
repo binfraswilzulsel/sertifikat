@@ -122,24 +122,29 @@
 
     // Loader bergaya mobile
     hasilDiv.innerHTML = '<div class="spinner-custom"></div>';
-    
-    google.script.run.withSuccessHandler(function(res) {
-      if (res.status == "ditemukan") {
-        hasilDiv.innerHTML = `
-          <div class="p-3 bg-light rounded-3 border mb-3">
-            <p class="text-success small fw-bold mb-2">✓ Sertifikat ditemukan!</p>
-            <a href="${res.url}" target="_blank" class="btn btn-success w-100 fw-bold py-3 shadow-sm" style="border-radius:10px;">
-              UNDUH SEKARANG (PDF)
-            </a>
-          </div>`;
-      } else {
-        hasilDiv.innerHTML = `
-          <div class="alert alert-danger border-0 small">
-            <b>Nama Tidak Ditemukan</b><br>
-            Coba ketik ulang tanpa gelar atau cek kembali ejaannya.
-          </div>`;
-      }
-    }).cariSertifikat(namaBersih);
+
+fetch("https://script.google.com/macros/s/AKfycbyz5mqrNZKXyysbc2IV_zwIj-F05i6_2bTicq01BZIpOyb06_M-UuC73NAs_DLIuGF4/exec?nama=" + encodeURIComponent(namaBersih))
+      .then(response => response.json())
+      .then(res => {
+        if (res.status == "ditemukan") {
+          hasilDiv.innerHTML = `
+            <div class="p-3 bg-light rounded-3 border mb-3">
+              <p class="text-success small fw-bold mb-2">✓ Sertifikat ditemukan!</p>
+              <a href="${res.url}" target="_blank" class="btn btn-success w-100 fw-bold py-3 shadow-sm" style="border-radius:10px;">
+                UNDUH SEKARANG (PDF)
+              </a>
+            </div>`;
+        } else {
+          hasilDiv.innerHTML = `
+            <div class="alert alert-danger border-0 small">
+              <b>Nama Tidak Ditemukan</b><br>
+              Coba ketik ulang tanpa gelar atau cek kembali ejaannya.
+            </div>`;
+        }
+      })
+      .catch(() => {
+        hasilDiv.innerHTML = '<div class="alert alert-danger border-0 small">Gagal koneksi ke server</div>';
+      });
   }
 </script>
 
